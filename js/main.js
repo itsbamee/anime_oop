@@ -16,13 +16,13 @@ let startTime = 0;
 
 btn.addEventListener('click', () => {
 	anime(box, {
-		prop: 'margin-left',
-		value: 300,
+		prop: 'width',
+		value: 500,
 		duration: 1000,
 		callback: () => {
 			anime(box, {
-				prop: 'margin-top',
-				value: 300,
+				prop: 'height',
+				value: 50,
 				duration: 1000,
 			});
 		},
@@ -31,6 +31,8 @@ btn.addEventListener('click', () => {
 
 function anime(selector, option) {
 	const startTime = performance.now();
+	const currentValue = parseInt(getComputedStyle(selector)[option.prop]);
+	console.log(currentValue);
 	requestAnimationFrame(move);
 
 	function move(time) {
@@ -41,17 +43,9 @@ function anime(selector, option) {
 		progress > 1 && (progress = 1);
 		progress < 1 ? requestAnimationFrame(move) : option.callback && option.callback();
 
-		selector.style[option.prop] = option.value * progress + 'px';
+		//result = 현재 수치값 + (변경할 만큼의 수치값 * 진행률)
+		let result = currentValue + (option.value - currentValue) * progress;
+
+		selector.style[option.prop] = result + 'px';
 	}
 }
-
-/*
-function move(time) {
-	let timelast = time - startTime;
-	let progress = timelast / speed;
-
-	progress < 0 && (progress = 0);
-	progress > 1 && (progress = 1);
-	progress < 1 && requestAnimationFrame(move);
-}
-*/
