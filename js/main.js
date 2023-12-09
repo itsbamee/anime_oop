@@ -31,7 +31,7 @@ function move(time) {
 	console.log('반복횟수', count++);
 	console.log('-------------------');
 
-	//만약 진행률이 음수가 되거나 1을 넘어서면 각각 0, 1로 강제 보정처리
+	//만약 진행률이 음수가 되거나 1을 넘어서면 각각 0, 1로 강제 보정처리 (console상에는 음수로 뜨게되지만 그 뜬 값을 보정하기 위해 아래 함수를 쓰는 것. 따라서 보정된 것을 console로 확인은 안됨)
 	progress < 0 && (progress = 0);
 	progress > 1 && (progress = 1);
 
