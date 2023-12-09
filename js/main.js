@@ -16,9 +16,16 @@ let startTime = 0;
 
 btn.addEventListener('click', () => {
 	anime(box, {
-		prop: 'margin-top',
+		prop: 'margin-left',
 		value: 300,
-		duration: 1500,
+		duration: 1000,
+		callback: () => {
+			anime(box, {
+				prop: 'margin-top',
+				value: 300,
+				duration: 1000,
+			});
+		},
 	});
 });
 
@@ -32,7 +39,7 @@ function anime(selector, option) {
 
 		progress < 0 && (progress = 0);
 		progress > 1 && (progress = 1);
-		progress < 1 && requestAnimationFrame(move);
+		progress < 1 ? requestAnimationFrame(move) : option.callback && option.callback();
 
 		selector.style[option.prop] = option.value * progress + 'px';
 	}
