@@ -28,31 +28,33 @@ function anime(selector, props, duration, callback) {
 		if (isString === 'string') {
 			const parentW = parseInt(getComputedStyle(selector.parentElement).width);
 			const parentH = parseInt(getComputedStyle(selector.parentElement).height);
-
 			const x = ['left', 'right', 'width'];
 			const y = ['top', 'bottom', 'height'];
 
 			for (let cond of x) key === cond && (currentValue = (currentValue / parentW) * 100);
 			for (let cond of y) key === cond && (currentValue = (currentValue / parentH) * 100);
 			if (key.includes('margin') || key.includes('padding'))
-				return console.error('margin, padding 속성은 퍼센트를 적용할 수 없습니다.');
+				return console.error('margin, padding 속성은 퍼센트 적용할 수 없습니다.');
 
-			const value2 = parseInt(value);
+			value = parseFloat(value);
+		}
 
-			requestAnimationFrame(move);
+		//해당 코드 isString 조건문 밖으로 빼기 (오류해결)
+		requestAnimationFrame(move);
 
-			function move(time) {
-				let timelast = time - startTime;
-				let progress = timelast / duration;
-				progress < 0 && (progress = 0);
-				progress > 1 && (progress = 1);
-				progress < 1 ? requestAnimationFrame(move) : callback && callback();
+		//해당 코드 isString 조건문 밖으로 빼기 (오류해결)
+		function move(time) {
+			let timelast = time - startTime;
+			let progress = timelast / duration;
+			progress < 0 && (progress = 0);
+			progress > 1 && (progress = 1);
+			progress < 1 ? requestAnimationFrame(move) : callback && callback();
 
-				let result = currentValue + (value2 - currentValue) * progress;
-				if (isString === 'string') selector.style[key] = result + '%';
-				else if (key === 'opacity') selector.style[key] = result;
-				else selector.style[key] = result + 'px';
-			}
+			let result = currentValue + (value - currentValue) * progress;
+
+			if (isString === 'string') selector.style[key] = result + '%';
+			else if (key === 'opacity') selector.style[key] = result;
+			else selector.style[key] = result + 'px';
 		}
 	}
 }
