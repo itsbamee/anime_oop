@@ -16,8 +16,8 @@ let startTime = 0;
 
 btn.addEventListener('click', () => {
 	anime(box, {
-		prop: 'left',
-		value: '40%',
+		prop: 'top',
+		value: '100%',
 		duration: 1000,
 	});
 });
@@ -29,8 +29,10 @@ function anime(selector, option) {
 	//만약 value로 받은 값이 문자열이면 퍼센트 연산처리
 	const isString = typeof option.value;
 	if (isString === 'string') {
-		//현재 값을 %로 변환 (현재px / 전체 브라우저 넓이) * 100
-		currentValue = (currentValue / window.innerWidth) * 100;
+		//백분율을 구하기 위해서 선택자의 직계부모의 넓이, 높이값을 미리 구함
+		const parentW = parseInt(getComputedStyle(selector.parentElement).width);
+		const parentH = parseInt(getComputedStyle(selector.parentElement).height);
+		currentValue = (currentValue / parentW) * 100;
 		option.value = parseFloat(option.value);
 	}
 	requestAnimationFrame(move);
@@ -38,16 +40,14 @@ function anime(selector, option) {
 	function move(time) {
 		let timelast = time - startTime;
 		let progress = timelast / option.duration;
-
 		progress < 0 && (progress = 0);
 		progress > 1 && (progress = 1);
 		progress < 1 ? requestAnimationFrame(move) : option.callback && option.callback();
 
-		//result = 현재 수치값 + (변경할 만큼의 수치값 * 진행률)
+		//result = 현재 수치값 + (변경할만큼의 수치값 * 진행률)
 		let result = currentValue + (option.value - currentValue) * progress;
-		//전달된 value값이 문자열이면 percent 처리해야 되므로 result 뒤에 % 붙이기
-		//그렇지 않으면 px 단위이니 result 뒤에 px 처리
-
+		//전달된 value값이 문자열이면 percent 처리해야 되므로 result뒤에 % 붙이기
+		//그렇지 않으면 px단위이니 result뒤에 px처리
 		if (isString === 'string') selector.style[option.prop] = result + '%';
 		else selector.style[option.prop] = result + 'px';
 	}

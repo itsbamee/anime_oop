@@ -1,10 +1,17 @@
 @import 'reset';
 
-#box {
-	width: 100px;
-	height: 100px;
-	background: lightblue;
-	position: absolute;
-	left: 80%;
-	top: 100px;
+.wrap {
+	width: 1000px;
+	height: 500px;
+	border: 1px solid red;
+	position: relative;
+
+	#box {
+		width: 100px;
+		height: 100px;
+		background: lightblue;
+		position: absolute;
+		left: 800px;
+		top: 0;
+	}
 }
