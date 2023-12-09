@@ -16,8 +16,8 @@ let startTime = 0;
 
 btn.addEventListener('click', () => {
 	anime(box, {
-		prop: 'top',
-		value: '100%',
+		prop: 'padding-left',
+		value: '50%',
 		duration: 1000,
 	});
 });
@@ -26,13 +26,25 @@ function anime(selector, option) {
 	const startTime = performance.now();
 	let currentValue = parseInt(getComputedStyle(selector)[option.prop]);
 
-	//만약 value로 받은 값이 문자열이면 퍼센트 연산처리
 	const isString = typeof option.value;
 	if (isString === 'string') {
-		//백분율을 구하기 위해서 선택자의 직계부모의 넓이, 높이값을 미리 구함
 		const parentW = parseInt(getComputedStyle(selector.parentElement).width);
 		const parentH = parseInt(getComputedStyle(selector.parentElement).height);
-		currentValue = (currentValue / parentW) * 100;
+
+		//가로나 세로축으로 퍼센트 적용할만한 속성명을 미리 배열로 그룹화
+		const x = ['left', 'right', 'width'];
+		const y = ['top', 'bottom', 'height'];
+
+		//속성명으로 가로축 관련 값이면 parentW값을 활용해서 퍼센트 변환
+		for (let cond of x) option.prop === cond && (currentValue = (currentValue / parentW) * 100);
+
+		//속성명으로 세로축 관련 값이면 parentH값을 활용해서 퍼센트 변환
+		for (let cond of y) option.prop === cond && (currentValue = (currentValue / parentH) * 100);
+
+		//속성명으로 margin, padding 구문이 있으면 실행을 중지하면서 경고문구 출력
+		if (option.prop.includes('margin') || option.prop.includes('padding'))
+			return console.error('margin, padding 속성은 퍼센트를 적용할 수 없습니다.');
+
 		option.value = parseFloat(option.value);
 	}
 	requestAnimationFrame(move);
