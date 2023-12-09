@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Document</title>
+  <link rel='stylesheet' href='css/style.css'>
+  <script defer src='js/main.js'></script>
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<!-- 
+  fps : frame per second (60fps)
+  hz : 화면주사율 (60hz)
+
+  setInterval
+  - 장점 : 작업자가 직접 반복횟수 지정가능 (원리대로라면 1초에 1000번 반복가능)
+  - 단점 : 불필요한 브라우저 리소스 낭비
+  - 단점2 : 오차범위가 큼 (반복을 처리하면서 조금씩 오차범위가 누적됨, 반복횟수가 많아질수록 오차범위가 점점 누적되서 정밀한 시간 설정이 불가능해짐)
+
+  requestAnimationFrame
+  - 시스템에 기본적으로 설정된 화면주사율에 따라 반복횟수가 자동조절 됨
+  - 시스템 상황에 따라서 최적화된 모션 성능을 구현할 수 있게됨 
+  - 화면 주사율에 맞춰서 동작되기 때문에 불필요하게 실행되는 반복처리가 없어서 오차범위가 정밀
+  - 반복기능이 내장되어 있지 않기 때문에 작업자가 직접 재귀적으로 호출을 반복처리
+  - canvas에서 모션 처리를 위해서 나온 기능
+-->
