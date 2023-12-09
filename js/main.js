@@ -9,43 +9,31 @@
 
 const btn = document.querySelector('button');
 const box = document.querySelector('#box');
-const speed = 1000;
-const targetValue = 500;
-let count = 0;
-let startTime = 0;
 
 btn.addEventListener('click', () => {
 	anime(box, {
-		prop: 'padding-left',
-		value: '50%',
+		prop: 'opacity',
+		value: 0.8,
 		duration: 1000,
 	});
 });
 
 function anime(selector, option) {
 	const startTime = performance.now();
-	let currentValue = parseInt(getComputedStyle(selector)[option.prop]);
+	let currentValue = parseFloat(getComputedStyle(selector)[option.prop]);
 
 	const isString = typeof option.value;
 	if (isString === 'string') {
 		const parentW = parseInt(getComputedStyle(selector.parentElement).width);
 		const parentH = parseInt(getComputedStyle(selector.parentElement).height);
 
-		//가로나 세로축으로 퍼센트 적용할만한 속성명을 미리 배열로 그룹화
 		const x = ['left', 'right', 'width'];
 		const y = ['top', 'bottom', 'height'];
 
-		//속성명으로 가로축 관련 값이면 parentW값을 활용해서 퍼센트 변환
 		for (let cond of x) option.prop === cond && (currentValue = (currentValue / parentW) * 100);
-
-		//속성명으로 세로축 관련 값이면 parentH값을 활용해서 퍼센트 변환
 		for (let cond of y) option.prop === cond && (currentValue = (currentValue / parentH) * 100);
-
-		//속성명으로 margin, padding 구문이 있으면 실행을 중지하면서 경고문구 출력
 		if (option.prop.includes('margin') || option.prop.includes('padding'))
 			return console.error('margin, padding 속성은 퍼센트를 적용할 수 없습니다.');
-
-		option.value = parseFloat(option.value);
 	}
 	requestAnimationFrame(move);
 
@@ -56,11 +44,9 @@ function anime(selector, option) {
 		progress > 1 && (progress = 1);
 		progress < 1 ? requestAnimationFrame(move) : option.callback && option.callback();
 
-		//result = 현재 수치값 + (변경할만큼의 수치값 * 진행률)
 		let result = currentValue + (option.value - currentValue) * progress;
-		//전달된 value값이 문자열이면 percent 처리해야 되므로 result뒤에 % 붙이기
-		//그렇지 않으면 px단위이니 result뒤에 px처리
 		if (isString === 'string') selector.style[option.prop] = result + '%';
+		else if (option.prop === 'opacity') selector.style[option.prop] = result;
 		else selector.style[option.prop] = result + 'px';
 	}
 }
