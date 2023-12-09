@@ -11,42 +11,48 @@ const btn = document.querySelector('button');
 const box = document.querySelector('#box');
 
 btn.addEventListener('click', () => {
-	anime(box, {
-		prop: 'opacity',
-		value: 0.8,
-		duration: 1000,
-	});
+	anime(box, { left: '50%', opacity: 0, height: '200%' }, 1000);
 });
 
-function anime(selector, option) {
+function anime(selector, props, duration, callback) {
 	const startTime = performance.now();
-	let currentValue = parseFloat(getComputedStyle(selector)[option.prop]);
+	const keys = Object.keys(props);
+	const values = Object.values(props);
 
-	const isString = typeof option.value;
-	if (isString === 'string') {
-		const parentW = parseInt(getComputedStyle(selector.parentElement).width);
-		const parentH = parseInt(getComputedStyle(selector.parentElement).height);
+	keys.forEach((key, idx) => setValue(key, values[idx], selector, duration, callback));
 
-		const x = ['left', 'right', 'width'];
-		const y = ['top', 'bottom', 'height'];
+	function setValue(key, value, selector, duration, callback) {
+		let currentValue = parseFloat(getComputedStyle(selector)[key]);
 
-		for (let cond of x) option.prop === cond && (currentValue = (currentValue / parentW) * 100);
-		for (let cond of y) option.prop === cond && (currentValue = (currentValue / parentH) * 100);
-		if (option.prop.includes('margin') || option.prop.includes('padding'))
-			return console.error('margin, padding 속성은 퍼센트를 적용할 수 없습니다.');
-	}
-	requestAnimationFrame(move);
+		const isString = typeof value;
+		if (isString === 'string') {
+			const parentW = parseInt(getComputedStyle(selector.parentElement).width);
+			const parentH = parseInt(getComputedStyle(selector.parentElement).height);
 
-	function move(time) {
-		let timelast = time - startTime;
-		let progress = timelast / option.duration;
-		progress < 0 && (progress = 0);
-		progress > 1 && (progress = 1);
-		progress < 1 ? requestAnimationFrame(move) : option.callback && option.callback();
+			const x = ['left', 'right', 'width'];
+			const y = ['top', 'bottom', 'height'];
 
-		let result = currentValue + (option.value - currentValue) * progress;
-		if (isString === 'string') selector.style[option.prop] = result + '%';
-		else if (option.prop === 'opacity') selector.style[option.prop] = result;
-		else selector.style[option.prop] = result + 'px';
+			for (let cond of x) key === cond && (currentValue = (currentValue / parentW) * 100);
+			for (let cond of y) key === cond && (currentValue = (currentValue / parentH) * 100);
+			if (key.includes('margin') || key.includes('padding'))
+				return console.error('margin, padding 속성은 퍼센트를 적용할 수 없습니다.');
+
+			const value2 = parseInt(value);
+
+			requestAnimationFrame(move);
+
+			function move(time) {
+				let timelast = time - startTime;
+				let progress = timelast / duration;
+				progress < 0 && (progress = 0);
+				progress > 1 && (progress = 1);
+				progress < 1 ? requestAnimationFrame(move) : callback && callback();
+
+				let result = currentValue + (value2 - currentValue) * progress;
+				if (isString === 'string') selector.style[key] = result + '%';
+				else if (key === 'opacity') selector.style[key] = result;
+				else selector.style[key] = result + 'px';
+			}
+		}
 	}
 }
