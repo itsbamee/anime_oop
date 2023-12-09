@@ -16,23 +16,23 @@ let startTime = 0;
 
 btn.addEventListener('click', () => {
 	anime(box, {
-		prop: 'width',
-		value: 500,
+		prop: 'left',
+		value: '40%',
 		duration: 1000,
-		callback: () => {
-			anime(box, {
-				prop: 'height',
-				value: 50,
-				duration: 1000,
-			});
-		},
 	});
 });
 
 function anime(selector, option) {
 	const startTime = performance.now();
-	const currentValue = parseInt(getComputedStyle(selector)[option.prop]);
-	console.log(currentValue);
+	let currentValue = parseInt(getComputedStyle(selector)[option.prop]);
+
+	//만약 value로 받은 값이 문자열이면 퍼센트 연산처리
+	const isString = typeof option.value;
+	if (isString === 'string') {
+		//현재 값을 %로 변환 (현재px / 전체 브라우저 넓이) * 100
+		currentValue = (currentValue / window.innerWidth) * 100;
+		option.value = parseFloat(option.value);
+	}
 	requestAnimationFrame(move);
 
 	function move(time) {
@@ -45,7 +45,10 @@ function anime(selector, option) {
 
 		//result = 현재 수치값 + (변경할 만큼의 수치값 * 진행률)
 		let result = currentValue + (option.value - currentValue) * progress;
+		//전달된 value값이 문자열이면 percent 처리해야 되므로 result 뒤에 % 붙이기
+		//그렇지 않으면 px 단위이니 result 뒤에 px 처리
 
-		selector.style[option.prop] = result + 'px';
+		if (isString === 'string') selector.style[option.prop] = result + '%';
+		else selector.style[option.prop] = result + 'px';
 	}
 }
