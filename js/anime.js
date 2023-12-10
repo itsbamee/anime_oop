@@ -2,7 +2,6 @@ class Anime {
 	#defOpt = { duration: 500, easing: [0, 0, 0, 0], callback: null };
 
 	constructor() {
-		//초기 인스턴스 복사시 setCDN만 먼저 호출해서 cdn코드 먼저 삽입되도록 처리
 		this.setCDN();
 	}
 
@@ -15,7 +14,6 @@ class Anime {
 		document.body.appendChild(script);
 	}
 
-	//추후 인스턴스로부터 animate메서드를 직접 호출해야 모션실행되도록 함수 분리
 	animate(selector, props, opt) {
 		this.resultOpt = { ...this.#defOpt, ...opt };
 		this.selector = selector;
@@ -64,11 +62,23 @@ class Anime {
 			: this.resultOpt.callback && this.resultOpt.callback();
 
 		let result = currentValue + (value - currentValue) * easingProgress;
-		//let result = currentValue + (value - currentValue) * progress;
 
 		if (isString === 'string') this.selector.style[key] = result + '%';
 		else if (key === 'opacity') this.selector.style[key] = result;
 		else if (key === 'scroll') this.selector.scroll(0, result);
 		else this.selector.style[key] = result + 'px';
+	}
+
+	//# 색상코드값 -> rgb(숫자1, 숫자2, 숫자3)으로 변환하는 함수
+	hexToRgb(hexColor) {
+		const hex = hexColor.replace('#', '');
+		//만약에 색상코드값이 3자리수면 해당 값을 각각 배열로 반환, 그렇지 않으면 2개씩 묶어서 배열로 반환[r,g,b]
+		const rgb = hex.length === 3 ? hex.match(/[a-f\d]/gi) : hex.match(/[a-f\d]{2}/gi);
+
+		//각 문자로 묶여져있는 [red, green, blue] => [숫자1, 숫자2, 숫자3]으로 변경해서 반환
+		rgb.map((el) => {
+			if (el.length === 1) el = el + el;
+			return parseInt(el, 16);
+		});
 	}
 }
