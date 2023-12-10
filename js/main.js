@@ -1,11 +1,8 @@
-/*
-  performance.now();
-  1ms 단위로 정밀한 시간계산이 가능
-  브라우저가 웹화면을 로딩한 순간부터의 해당 구문이 호출된 시점까지의 누적시간을 ms단위로 반환
-
-  requestAnimationFrame에서 화면주사율에 의해서 반복횟수가 정해지기 때문에 모션의 시간제어 불가능
-  결국 정해진 반복횟수 안에서 원하는 시간동안 모션처리를 하기 위해서는 반복횟수랑 최종 수치값이 변경되야 되는 변화폭을 제어
-*/
+const script = document.createElement('script');
+script.src = 'https://cdn.jsdelivr.net/npm/bezier-easing@2.1.0/dist/bezier-easing.min.js';
+script.async = true;
+document.body.appendChild(script);
+//의존성 cdn script 동적으로 추가
 
 const btn = document.querySelector('button');
 const box = document.querySelector('#box');
