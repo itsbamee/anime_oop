@@ -69,7 +69,7 @@ class Anime {
 		else this.selector.style[key] = result + 'px';
 	}
 
-	//# 색상코드값 -> rgb(숫자1, 숫자2, 숫자3)으로 변환하는 함수
+	//앞으로 변경할 색상인 #색상코드 값을 숫자형태로 배열로 반환
 	hexToRgb(hexColor) {
 		const hex = hexColor.replace('#', '');
 		//만약에 색상코드값이 3자리수면 해당 값을 각각 배열로 반환, 그렇지 않으면 2개씩 묶어서 배열로 반환[r,g,b]
@@ -80,5 +80,10 @@ class Anime {
 			if (el.length === 1) el = el + el;
 			return parseInt(el, 16);
 		});
+	}
+	//이미 css에 적용되어 있는 문자'rgb(숫자1,숫자2,숫자3)'에서 숫자형태로 배열 반환
+	colorToArray(strRgb) {
+		// return strRgb.match(/\d+/g).map((el) => Number(el));
+		return strRgb.match(/\d+/g).map(Number);
 	}
 }
