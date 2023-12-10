@@ -8,9 +8,10 @@
 */
 
 const btn = document.querySelector('button');
+const box = document.querySelector('#box');
 
 btn.addEventListener('click', () => {
-	anime(window, { scroll: 2000 }, 5000);
+	anime(box, { left: 1000 }, 500);
 });
 
 function anime(selector, props, duration, callback) {
@@ -48,11 +49,18 @@ function anime(selector, props, duration, callback) {
 		function move(time) {
 			let timelast = time - startTime;
 			let progress = timelast / duration;
+
+			//cubic-bezier 사이트에서 원하는 가속도 수치값을 구한 뒤 해당 값을 활용한 easing적용함수에 progress값 적용
+			const easingfunc = BezierEasing(0.46, -0.51, 0.58, 1.5);
+			// const easingfunc = BezierEasing(0, 0, 0, 0);
+			const easingProgress = easingfunc(progress);
+
 			progress < 0 && (progress = 0);
 			progress > 1 && (progress = 1);
 			progress < 1 ? requestAnimationFrame(move) : callback && callback();
 
-			let result = currentValue + (value - currentValue) * progress;
+			//let result = currentValue + (value - currentValue) * progress;
+			let result = currentValue + (value - currentValue) * easingProgress;
 
 			if (isString === 'string') selector.style[key] = result + '%';
 			else if (key === 'opacity') selector.style[key] = result;

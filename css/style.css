@@ -15,14 +15,18 @@ a {
   outline: 0;
 }
 
-body {
-  height: 400vh;
-  background: linear-gradient(to bottom, lightblue, lightcoral, lightyellow);
-}
-
 button {
   position: fixed;
   top: 0;
+  left: 0;
+}
+
+#box {
+  width: 100px;
+  height: 100px;
+  background: lightsteelblue;
+  position: absolute;
+  top: 100px;
   left: 0;
 }
 
