@@ -9,10 +9,17 @@ const box = document.querySelector('#box');
 
 btn.addEventListener('click', () => {
 	//0.46, -0.51, 0.58, 1.5
-	anime(box, { left: 1000 }, 500, [0, 0, 0, 0]);
+	anime(
+		box,
+		{ left: 1000 },
+		{ duration: 500, easing: [0, 0, 0, 0], callback: () => console.log('complete') }
+	);
 });
 
-function anime(selector, props, duration, easing, callback) {
+function anime(selector, props, opt) {
+	const defOpt = { duration: 500, easing: [0, 0, 0, 0], callback: null };
+	const resultOpt = { ...defOpt, ...opt };
+
 	const startTime = performance.now();
 	const keys = Object.keys(props);
 	const values = Object.values(props);
@@ -46,19 +53,15 @@ function anime(selector, props, duration, easing, callback) {
 
 		function move(time) {
 			let timelast = time - startTime;
-			let progress = timelast / duration;
+			let progress = timelast / resultOpt.duration;
 
-			//cubic-bezier 사이트에서 원하는 가속도 수치값을 구한 뒤 해당 값을 활용한 easing적용함수에 progress값 적용
-			// const easingfunc = BezierEasing(0, 0, 0, 0);
-			// easing 파라미터로 전달되는 배열값을 전개연산자로 뽑아낸 다음에 대괄호로 묶지 않고 그대로 값을 활용하면 배열 안쪽의 4개의 값을 바로 함수의 인수값으로 순차적으로 전달 가능
-			const easingfunc = BezierEasing(...easing);
+			const easingfunc = BezierEasing(...resultOpt.easing);
 			const easingProgress = easingfunc(progress);
 
 			progress < 0 && (progress = 0);
 			progress > 1 && (progress = 1);
-			progress < 1 ? requestAnimationFrame(move) : callback && callback();
+			progress < 1 ? requestAnimationFrame(move) : resultOpt.callback && resultOpt.callback();
 
-			//let result = currentValue + (value - currentValue) * progress;
 			let result = currentValue + (value - currentValue) * easingProgress;
 
 			if (isString === 'string') selector.style[key] = result + '%';
