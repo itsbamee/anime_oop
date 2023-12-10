@@ -8,10 +8,9 @@
 */
 
 const btn = document.querySelector('button');
-const box = document.querySelector('#box');
 
 btn.addEventListener('click', () => {
-	anime(box, { left: '50%', opacity: 0, height: '200%' }, 1000);
+	anime(window, { scroll: 2000 }, 5000);
 });
 
 function anime(selector, props, duration, callback) {
@@ -22,7 +21,12 @@ function anime(selector, props, duration, callback) {
 	keys.forEach((key, idx) => setValue(key, values[idx], selector, duration, callback));
 
 	function setValue(key, value, selector, duration, callback) {
-		let currentValue = parseFloat(getComputedStyle(selector)[key]);
+		let currentValue = null;
+
+		//key값이 만약 스크롤이면 value값을 getComputedStyle로 구하는 값이 아니므로 분기처리
+		key === 'scroll'
+			? (currentValue = selector.scrollY)
+			: (currentValue = parseFloat(getComputedStyle(selector)[key]));
 
 		const isString = typeof value;
 		if (isString === 'string') {
@@ -39,10 +43,8 @@ function anime(selector, props, duration, callback) {
 			value = parseFloat(value);
 		}
 
-		//해당 코드 isString 조건문 밖으로 빼기 (오류해결)
 		requestAnimationFrame(move);
 
-		//해당 코드 isString 조건문 밖으로 빼기 (오류해결)
 		function move(time) {
 			let timelast = time - startTime;
 			let progress = timelast / duration;
@@ -54,6 +56,7 @@ function anime(selector, props, duration, callback) {
 
 			if (isString === 'string') selector.style[key] = result + '%';
 			else if (key === 'opacity') selector.style[key] = result;
+			else if (key === 'scroll') selector.scroll(0, result);
 			else selector.style[key] = result + 'px';
 		}
 	}

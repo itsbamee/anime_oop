@@ -1,17 +1,12 @@
 @import 'reset';
 
-.wrap {
-	width: 1000px;
-	height: 500px;
-	border: 1px solid red;
-	position: relative;
+body {
+	height: 400vh;
+	background: linear-gradient(to bottom, lightblue, lightcoral, lightyellow);
+}
 
-	#box {
-		width: 100px;
-		height: 100px;
-		background: lightblue;
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
+button {
+	position: fixed;
+	top: 0;
+	left: 0;
 }
