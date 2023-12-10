@@ -7,9 +7,11 @@ class Anime {
 	}
 
 	setCDN() {
+		if (Array.from(document.scripts).filter((el) => el.id === 'bezier').length !== 0) return;
 		const script = document.createElement('script');
 		script.src = 'https://cdn.jsdelivr.net/npm/bezier-easing@2.1.0/dist/bezier-easing.min.js';
 		script.async = true;
+		script.id = 'bezier';
 		document.body.appendChild(script);
 	}
 
